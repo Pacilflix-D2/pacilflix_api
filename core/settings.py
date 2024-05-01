@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'downloads',
     'favorites',
     'shows',
+    'subscription'
 ]
 
 MIDDLEWARE = [
