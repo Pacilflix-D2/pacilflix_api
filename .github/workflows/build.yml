@@ -1,0 +1,84 @@
+name: Django CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.11]
+        node-version: [20.11.1]
+
+    env:
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      DEBUG: ${{vars.DEBUG}}
+      DB_NAME: ${{secrets.DB_NAME}}
+      DB_USER: ${{secrets.DB_USER}}
+      DB_PASS: ${{secrets.DB_PASS}}
+      DB_HOST: ${{secrets.DB_HOST}}
+      DB_PORT: ${{secrets.DB_PORT}}
+      STATIC_ROOT: ${{vars.STATIC_ROOT}}
+      MEDIA_ROOT: ${{vars.MEDIA_ROOT}}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set virtual environment
+        run: |
+          python3.11 -m venv venv
+          source ${{secrets.VENV_PATH}}/venv/bin/activate
+      - name: Set environment variables
+        run: |
+          echo "SECRET_KEY=${{secrets.SECRET_KEY}}" >> .env
+          echo "DEBUG=${{vars.DEBUG}}" >> .env
+          echo "ACCESS_TOKEN_LIFETIME=${{vars.ACCESS_TOKEN_LIFETIME}}" >> .env
+          echo "REFRESH_TOKEN_LIFETIME=${{vars.REFRESH_TOKEN_LIFETIME}}" >> .env
+          echo "DB_NAME_PROD=${{secrets.DB_NAME_PROD}}" >> .env
+          echo "DB_USER_PROD=${{secrets.DB_USER_PROD}}" >> .env
+          echo "DB_PASS_PROD=${{secrets.DB_PASS_PROD}}" >> .env
+          echo "DB_HOST_PROD=${{secrets.DB_HOST_PROD}}" >> .env
+          echo "DB_PORT_PROD=${{secrets.DB_PORT_PROD}}" >> .env
+          echo "DB_NAME_DEV=${{secrets.DB_NAME_DEV}}" >> .env
+          echo "DB_USER_DEV=${{secrets.DB_USER_DEV}}" >> .env
+          echo "DB_PASS_DEV=${{secrets.DB_PASS_DEV}}" >> .env
+          echo "DB_HOST_DEV=${{secrets.DB_HOST_DEV}}" >> .env
+          echo "DB_PORT_DEV=${{secrets.DB_PORT_DEV}}" >> .env
+          echo "GOOGLE_OAUTH2_CLIENT_ID=${{secrets.GOOGLE_OAUTH2_CLIENT_ID}}" >> .env
+          echo "GOOGLE_OAUTH2_CLIENT_SECRET=${{secrets.GOOGLE_OAUTH2_CLIENT_SECRET}}" >> .env
+          echo "GOOGLE_OAUTH2_PROJECT_ID=${{secrets.GOOGLE_OAUTH2_PROJECT_ID}}" >> .env
+          echo "BASE_BACKEND_URL=${{vars.BASE_BACKEND_URL}}" >> .env
+          echo "FE_PORT=${{secrets.FE_PORT}}" >> .env
+          echo "WEBHOOK_BASKET=${{vars.WEBHOOK_BASKET}}" >> .env
+          echo "WEBHOOK_FUTSAL=${{vars.WEBHOOK_FUTSAL}}" >> .env
+          echo "WEBHOOK_VALORANT=${{vars.WEBHOOK_VALORANT}}" >> .env
+          echo "WEBHOOK_ML=${{vars.WEBHOOK_ML}}" >> .env
+          echo "WEBHOOK_EAFC=${{vars.WEBHOOK_EAFC}}" >> .env
+          echo "WEBHOOK_DOTA=${{vars.WEBHOOK_DOTA}}" >> .env
+          echo "WEBHOOK_CHESS=${{vars.WEBHOOK_CHESS}}" >> .env
+          echo "WEBHOOK_BRAWLHALLA=${{vars.WEBHOOK_BRAWLHALLA}}" >> .env
+          echo "WEBHOOK_FG=${{vars.WEBHOOK_FG}}" >> .env
+          echo "WEBHOOK_AVATAR=${{vars.WEBHOOK_AVATAR}}" >> .env
+          echo "STATIC_ROOT=${{vars.STATIC_ROOT}}" >> .env
+          echo "MEDIA_ROOT=${{vars.MEDIA_ROOT}}" >> .env
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run Tests
+        run: |
+          python manage.py test
+      - name: Migrate Database
+        run: python manage.py migrate --no-input
+      - name: Collect static
+        run: python manage.py collectstatic --no-input
+      - name: Rerun server
+        run: /home/perak/.nvm/versions/node/v${{matrix.node-version}}/bin/pm2 restart pacilflix_api --update-env
