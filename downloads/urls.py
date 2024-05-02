@@ -1,3 +1,7 @@
 from django.urls import path
 
-urlpatterns = []
+from downloads.views import DownloadListView
+
+urlpatterns = [
+    path('', DownloadListView.as_view())
+]
