@@ -64,7 +64,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
-TEMPLATES = [
+TEMPLATES = [  # type: ignore
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],

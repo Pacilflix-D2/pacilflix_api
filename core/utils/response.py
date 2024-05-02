@@ -1,5 +1,5 @@
 from typing import Mapping, Optional, TypeVar, Generic, TypedDict, Literal, Any
-from core.utils.response import Response as RESTResponse
+from rest_framework.response import Response as RESTResponse
 from rest_framework import status as rest_status
 
 HttpStatus = Literal[
@@ -96,11 +96,11 @@ class Response(RESTResponse, Generic[T]):
         exception: ExceptionResponse = False,
         content_type: ContentTypeResponse = None,
     ) -> None:
-        response_data: ResponseDict | Any = {
+        response_data: ResponseDict = {
             "code": status,
             "success": rest_status.is_success(status),  # type: ignore
             "message": message,
-        }
+        }  # type: ignore
 
         if data:
             response_data["data"] = data
