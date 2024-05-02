@@ -1,5 +1,5 @@
 from typing import Mapping, Optional, TypeVar, Generic, TypedDict, Literal, Any
-from rest_framework.response import Response as RESTResponse
+from core.utils.response import Response as RESTResponse
 from rest_framework import status as rest_status
 
 HttpStatus = Literal[
