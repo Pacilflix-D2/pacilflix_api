@@ -1,8 +1,11 @@
 from dataclasses import dataclass
+from typing import TypedDict
 
-from core.models.film import Film
+
+class FilmDict(TypedDict):
+    ...
 
 
 @dataclass
 class FilmListResponse:
-    films: list[Film]
+    films: list[FilmDict]

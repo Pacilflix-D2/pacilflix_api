@@ -5,5 +5,7 @@ from rest_framework import status
 
 def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
     return Response(data={
+        'code': status.HTTP_500_INTERNAL_SERVER_ERROR,
+        'success': False,
         'message': 'Internal Server Error'
     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -56,6 +56,20 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'core.utils.exception_handler.custom_exception_handler'
 }
 
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': environ.get('DB_NAME'),
+        'USER': environ.get('DB_USER'),
+        'PASSWORD': environ.get('DB_PASS'),
+        'HOST': environ.get('DB_HOST'),
+        'PORT': environ.get('DB_PORT')
+    }
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

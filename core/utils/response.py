@@ -1,4 +1,4 @@
-from typing import Mapping, Optional, TypeVar, Generic, TypedDict, Literal, Any
+from typing import Mapping, Optional, TypedDict, Literal, Any
 from rest_framework.response import Response as RESTResponse
 from rest_framework import status as rest_status
 
@@ -68,9 +68,8 @@ HttpStatus = Literal[
     511,
 ]
 
-T = TypeVar("T")
 MessageResponseType = str
-DataResponseType = Optional[T]
+DataResponseType = Any
 StatusResponseType = HttpStatus
 TemplateNameResponseType = Optional[str]
 HeadersResponseType = Optional[Mapping[str, str]]
@@ -85,11 +84,11 @@ class ResponseDict(TypedDict):
     message: str
 
 
-class Response(RESTResponse, Generic[T]):
+class Response(RESTResponse):
     def __init__(
         self,
         message: MessageResponseType,
-        data: DataResponseType[T] = None,
+        data: DataResponseType = None,
         status: StatusResponseType = rest_status.HTTP_200_OK,
         template_name: TemplateNameResponseType = None,
         headers: HeadersResponseType = None,
