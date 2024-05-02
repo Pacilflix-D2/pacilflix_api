@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'downloads',
     'favorites',
     'shows',
-    'subscription'
+    'subscriptions',
+    'film',
+    'series'
 ]
 
 MIDDLEWARE = [

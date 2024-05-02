@@ -6,5 +6,7 @@ urlpatterns = [
     path('downloads/', include(('downloads.urls', 'downloads'))),
     path('shows/', include(('shows.urls', 'shows'))),
     path('favorites/', include(('favorites.urls', 'favorites'))),
-    path('subcriptions/', include(('subcriptions.urls', 'subcriptions'))),
+    path('subscriptions/', include(('subscriptions.urls', 'subscriptions'))),
+    path('film/', include(('film.urls', 'film'))),
+    path('series/', include(('series.urls', 'series')))
 ]
