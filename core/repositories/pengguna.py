@@ -1,12 +1,10 @@
+from core.models.pengguna import Pengguna
 from core.repositories.database import Database
 
 
 class PenggunaRepository(Database):
-    def find_by_id(self, id: str):
+    def find_by_username(self, username: str) -> Pengguna:
         ...
 
-    def find_by_username(self, username: str):
-        ...
-
-    def create(self, username: str, password: str, id_tayangan: str | None = None, negara_asal: str):
+    def create(self, username: str, password: str, negara_asal: str, id_tayangan: str | None = None) -> Pengguna:
         ...
