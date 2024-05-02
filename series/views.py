@@ -11,3 +11,8 @@ class SeriesListView(APIView):
 class SeriesDetailView(APIView):
     def get(self, request: Request, id_tayangan: str) -> Response:
         ...
+
+
+class SeriesUlasanView(APIView):
+    def post(self, request: Request, id_tayangan: str) -> Response:
+        ...

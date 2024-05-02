@@ -11,3 +11,8 @@ class FilmListView(APIView):
 class FilmDetailView(APIView):
     def get(self, request: Request, id_tayangan: str) -> Response:
         ...
+
+
+class FilmUlasanView(APIView):
+    def post(self, request: Request, id_tayangan: str) -> Response:
+        ...
