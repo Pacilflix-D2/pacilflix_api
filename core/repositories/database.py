@@ -1,8 +1,6 @@
 from typing import Any
-from psycopg2 import connect
 from os import environ
-
-from psycopg2._psycopg import connection
+from django.db import connection
 
 
 class Database:
@@ -16,17 +14,7 @@ class Database:
 
     # this could possibly throws error, so wrap this method with try catch
     def query(self, query: str) -> list[tuple[Any, ...]]:
-        conn: connection = connect(
-            dbname=self.db_name,
-            user=self.db_user,
-            password=self.db_pass,
-            host=self.db_host,
-            port=self.db_port
-        )
-
-        cursor = conn.cursor()
-        cursor.execute(query)
-        rows: list[tuple[Any, ...]] = cursor.fetchall()
-        conn.close()
-
-        return rows
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            rows: list[tuple[Any, ...]] = cursor.fetchall()
+            return rows
