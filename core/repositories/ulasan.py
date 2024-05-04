@@ -9,3 +9,9 @@ class UlasanRepository(Database):
 
     def find_all(self) -> list[Ulasan]:
         ...
+
+    def find_by_id_tayangan(self, id_tayangan: str) -> list[Ulasan]:
+        ...
+
+    def find_by_username(self, username: str) -> list[Ulasan]:
+        ...
