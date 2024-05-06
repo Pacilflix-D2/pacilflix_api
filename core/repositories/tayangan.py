@@ -12,7 +12,7 @@ class TayanganRepository(Database):
 
     def find_top_10_tayangan_global(self) -> list[Tayangan]:
         try:
-            tayangan_tuples = self.query(
+            tayangan_tuples = self.select(
                 'SELECT * FROM tayangan ORDER BY judul LIMIT 10')
         except:
             raise NotFoundException('Cannot find shows.')

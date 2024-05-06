@@ -8,7 +8,7 @@ from core.utils.exceptions.not_found import NotFoundException
 class RiwayatNontonRepository(Database):
     def find_by_id_tayangan(self, id_tayangan: str) -> list[RiwayatNonton]:
         try:
-            tuples = self.query(
+            tuples = self.select(
                 f"SELECT * FROM riwayat_nonton WHERE id_tayangan = '{id_tayangan}'")
         except:
             raise NotFoundException('Cannot find watch histories.')
@@ -28,7 +28,7 @@ class RiwayatNontonRepository(Database):
 
     def find_by_id_tayangan_last_week(self, id_tayangan: str) -> list[RiwayatNonton]:
         try:
-            tuples = self.query(
+            tuples = self.select(
                 f"SELECT * FROM riwayat_nonton WHERE id_tayangan = '{id_tayangan}' AND end_date_time >= NOW() - INTERVAL '7 days'")
         except:
             raise InternalServerException('Failed to find riwayat nonton.')

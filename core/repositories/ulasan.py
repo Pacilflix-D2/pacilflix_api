@@ -14,7 +14,7 @@ class UlasanRepository(Database):
     def find_by_id_tayangan(self, id_tayangan: str) -> list[Ulasan]:
         try:
             print('hi')
-            ulasan_tuples = self.query(
+            ulasan_tuples = self.select(
                 f"SELECT * FROM ulasan WHERE id_tayangan = '{id_tayangan}'")
             print(ulasan_tuples)
         except:

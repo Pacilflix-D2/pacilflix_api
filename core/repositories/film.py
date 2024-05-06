@@ -6,7 +6,7 @@ from core.utils.exceptions.not_found import NotFoundException
 class FilmRepository(Database):
     def find_all(self) -> list[Film]:
         try:
-            film_tuples = self.query('SELECT * FROM film')
+            film_tuples = self.select('SELECT * FROM film')
         except:
             raise NotFoundException('Cannot find films.')
         # print('WOW')
@@ -31,7 +31,7 @@ class FilmRepository(Database):
 
     def find_by_id(self, id_tayangan: str) -> Film:
         try:
-            film_tuples = self.query(
+            film_tuples = self.select(
                 f"SELECT * FROM film WHERE id_tayangan = '{id_tayangan}'")
         except:
             raise NotFoundException('Cannot find film.')
