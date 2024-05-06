@@ -5,7 +5,26 @@ from core.utils.exceptions.not_found import NotFoundException
 
 class TayanganRepository(Database):
     def find_by_id(self, id: str) -> Tayangan:
-        ...
+        try:
+            tuples = self.select(f"SELECT * FROM tayangan WHERE id = '{id}'")
+        except:
+            raise NotFoundException('Cannot find shows.')
+
+        if len(tuples) == 0:
+            raise NotFoundException('Cannot find shows.')
+
+        tuple = tuples[0]
+
+        return Tayangan(
+            id=str(tuple[0]),
+            judul=tuple[1],
+            sinopsis=tuple[2],
+            asal_negara=tuple[3],
+            sinopsis_trailer=tuple[4],
+            url_video_trailer=tuple[5],
+            release_date_trailer=tuple[6],
+            id_sutradara=str(tuple[7])
+        )
 
     def find_all(self) -> list[Tayangan]:
         ...
