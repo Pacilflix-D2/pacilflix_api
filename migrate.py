@@ -60,12 +60,6 @@ def reset():
     print('Resetting DB...')
     load_dotenv(override=True)
 
-    print(environ.get('DB_NAME'))
-    print(environ.get('DB_USER'))
-    print(environ.get('DB_PASS'))
-    print(environ.get('DB_HOST'))
-    print(environ.get('DB_PORT', 5432))
-
     connection = connect(
         dbname=environ.get('DB_NAME'),
         user=environ.get('DB_USER'),
