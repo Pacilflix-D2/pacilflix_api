@@ -10,7 +10,7 @@ from core.utils.exceptions.unauthorized import UnauthorizedException
 
 def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Response:
     code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    message = 'Internal Server Error'
+    message = str(exc)
 
     if isinstance(exc, NotFoundException):
         code = status.HTTP_404_NOT_FOUND
