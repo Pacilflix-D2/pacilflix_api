@@ -1,8 +1,10 @@
 from typing import Any
 from rest_framework.views import APIView
 from rest_framework.request import Request
+from core.models.contributor import Contributor
 from core.models.series import Series
 from core.models.tayangan import Tayangan
+from core.repositories.contributors import ContributorRepository
 from core.repositories.episode import EpisodeRepository
 from core.repositories.series import SeriesRepository
 from core.repositories.tayangan import TayanganRepository
@@ -36,14 +38,23 @@ class SeriesDetailView(APIView):
         tayangan: Tayangan = TayanganRepository().find_by_id(id=series.id_tayangan)
         tayangan_json = tayangan.to_json()
         tayangan_json.pop('id')
+        tayangan_json.pop('id_sutradara')
 
         episodes = EpisodeRepository().find_by_id_series(id_series=series.id_tayangan)
         episode_list_json: list[dict[str, Any]] = []
         for episode in episodes:
             episode_list_json.append(episode.to_json())
 
-        series_json = {**series.to_json(), **tayangan_json,
-                       "episodes": episode_list_json}
+        sutradara: Contributor = ContributorRepository().find_by_id(id=tayangan.id_sutradara)
+
+        series_json = {
+            **series.to_json(),
+            **tayangan_json,
+            "episodes": episode_list_json,
+            "sutradara": {
+                **sutradara.to_json()
+            }
+        }
 
         return Response(message='Success get series detail!', data=series_json, status=status.HTTP_200_OK)
 
