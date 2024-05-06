@@ -5,7 +5,6 @@ from core.models.film import Film
 from core.models.ulasan import Ulasan
 from core.repositories.film import FilmRepository
 from core.repositories.ulasan import UlasanRepository
-from core.utils.exceptions.not_found import NotFoundException
 from core.utils.response import Response
 from rest_framework import status
 
