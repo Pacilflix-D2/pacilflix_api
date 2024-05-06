@@ -6,6 +6,7 @@ from core.models.contributor import Contributor
 from core.models.pengguna import Pengguna
 from core.models.series import Series
 from core.models.tayangan import Tayangan
+from core.models.ulasan import Ulasan
 from core.repositories.contributors import ContributorRepository
 from core.repositories.episode import EpisodeRepository
 from core.repositories.series import SeriesRepository
@@ -44,10 +45,14 @@ class SeriesDetailView(APIView):
         - genre
         - pemain
         - penulis skenario
-
     '''
 
     def get(self, request: Request, id_tayangan: str) -> Response:
+        user: Pengguna | None = get_user(request=request)
+
+        if not user:
+            raise UnauthorizedException('Must login first.')
+
         series: Series = SeriesRepository().find_by_id(id=id_tayangan)
 
         tayangan: Tayangan = TayanganRepository().find_by_id(id=series.id_tayangan)
@@ -75,6 +80,23 @@ class SeriesDetailView(APIView):
 
 
 class SeriesUlasanView(APIView):
+    def get(self, request: Request, id_tayangan: str) -> Response:
+        user: Pengguna | None = get_user(request=request)
+
+        if not user:
+            raise UnauthorizedException('Must login first.')
+
+        tayangan: Tayangan = TayanganRepository().find_by_id(id=id_tayangan)
+
+        reviews: list[Ulasan] = UlasanRepository(
+        ).find_by_id_tayangan(id_tayangan=tayangan.id)
+
+        data_json: list[dict[str, Any]] = []
+        for review in reviews:
+            data_json.append(review.to_json())
+
+        return Response(message='Success get reviews!', data=data_json, status=status.HTTP_200_OK)
+
     def post(self, request: Request, id_tayangan: str) -> Response:
         user: Pengguna | None = get_user(request=request)
 
