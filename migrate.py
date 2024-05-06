@@ -1,5 +1,5 @@
 from typing import Literal
-from psycopg2 import connect, sql
+from psycopg2 import connect
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from dotenv import load_dotenv
 from os import environ
@@ -8,7 +8,7 @@ import sys
 
 def migrate():
     print('Migrating...')
-    load_dotenv()
+    load_dotenv(override=True)
 
     connection = connect(
         dbname=environ.get('DB_NAME'),
@@ -33,7 +33,7 @@ def migrate():
 
 def seeding():
     print('Seeding...')
-    load_dotenv()
+    load_dotenv(override=True)
 
     connection = connect(
         dbname=environ.get('DB_NAME'),
@@ -58,7 +58,13 @@ def seeding():
 
 def reset():
     print('Resetting DB...')
-    load_dotenv()
+    load_dotenv(override=True)
+
+    print(environ.get('DB_NAME'))
+    print(environ.get('DB_USER'))
+    print(environ.get('DB_PASS'))
+    print(environ.get('DB_HOST'))
+    print(environ.get('DB_PORT', 5432))
 
     connection = connect(
         dbname=environ.get('DB_NAME'),
@@ -86,7 +92,7 @@ def reset():
 if __name__ == '__main__':
     mode: Literal['MIGRATE', 'SEEDING', "RESET"] = 'MIGRATE'
 
-    if len(sys.argv) != 0:
+    if len(sys.argv) != 1:
         arg1 = sys.argv[1]
 
         if arg1 == 'reset':
