@@ -25,6 +25,8 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Respons
         code = status.HTTP_400_BAD_REQUEST
         message = str(exc)
 
+    print(str(exc))
+
     return Response(data={
         'code': code,
         'success': False,
