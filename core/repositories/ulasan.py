@@ -1,6 +1,7 @@
 from datetime import datetime
 from core.models.ulasan import Ulasan
 from core.repositories.database import Database
+from core.utils.exceptions.internal_server_error import InternalServerException
 from core.utils.exceptions.not_found import NotFoundException
 
 
@@ -38,3 +39,25 @@ class UlasanRepository(Database):
 
     def find_by_username(self, username: str) -> list[Ulasan]:
         ...
+
+    def create(self, id_tayangan: str, username: str, timestamp: datetime, rating: int, deskripsi: str | None) -> Ulasan:
+        new_ulasan = Ulasan(
+            id_tayangan=id_tayangan,
+            username=username,
+            timestamp=timestamp,
+            rating=rating,
+            deskripsi=deskripsi
+        )
+
+        try:
+            if deskripsi:
+                self.insert(
+                    f"INSERT INTO ULASAN (id_tayangan, username, timestamp, rating, deskripsi) VALUES ('{id_tayangan}', '{username}', '{timestamp}', {rating}, '{deskripsi}')")
+            else:
+                self.insert(
+                    f"INSERT INTO ULASAN (id_tayangan, username, timestamp, rating) VALUES ('{id_tayangan}', '{username}', '{timestamp}', {rating})")
+        except Exception as e:
+            print(e)
+            raise InternalServerException('Failed to create user.')
+
+        return new_ulasan
