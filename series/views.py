@@ -38,6 +38,15 @@ class SeriesListView(APIView):
 
 
 class SeriesDetailView(APIView):
+    '''
+    TODO:
+    - belum ada x di response nya:
+        - genre
+        - pemain
+        - penulis skenario
+
+    '''
+
     def get(self, request: Request, id_tayangan: str) -> Response:
         series: Series = SeriesRepository().find_by_id(id=id_tayangan)
 
