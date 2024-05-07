@@ -10,6 +10,8 @@ from core.models.ulasan import Ulasan
 from core.repositories.contributors import ContributorRepository
 from core.repositories.episode import EpisodeRepository
 from core.repositories.gender import GenreRepository
+from core.repositories.pemain import PemainRepository
+from core.repositories.penulis_skenario import PenulisSkenarioRepository
 from core.repositories.series import SeriesRepository
 from core.repositories.tayangan import TayanganRepository
 from core.repositories.ulasan import UlasanRepository
@@ -66,9 +68,13 @@ class SeriesDetailView(APIView):
         for episode in episodes:
             episode_list_json.append(episode.to_json())
 
+        genres = GenreRepository().find_by_id_tayangan(id_tayangan=tayangan.id)
+
         sutradara: Contributor = ContributorRepository().find_by_id(id=tayangan.id_sutradara)
 
-        genres = GenreRepository().find_by_id_tayangan(id_tayangan=tayangan.id)
+        players = PemainRepository().find_by_id_tayangan(id_tayangan=tayangan.id)
+
+        writers = PenulisSkenarioRepository().find_by_id_tayangan(id_tayangan=tayangan.id)
 
         series_json = {
             **series.to_json(),
@@ -77,7 +83,9 @@ class SeriesDetailView(APIView):
             "sutradara": {
                 **sutradara.to_json()
             },
-            "genres": [genre.to_json() for genre in genres]
+            "genres": [genre.to_json() for genre in genres],
+            "players": [player.to_json() for player in players],
+            "writers": [writer.to_json() for writer in writers]
         }
 
         return Response(message='Success get series detail!', data=series_json, status=status.HTTP_200_OK)
