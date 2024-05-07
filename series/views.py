@@ -9,6 +9,7 @@ from core.models.tayangan import Tayangan
 from core.models.ulasan import Ulasan
 from core.repositories.contributors import ContributorRepository
 from core.repositories.episode import EpisodeRepository
+from core.repositories.gender import GenreRepository
 from core.repositories.series import SeriesRepository
 from core.repositories.tayangan import TayanganRepository
 from core.repositories.ulasan import UlasanRepository
@@ -67,13 +68,16 @@ class SeriesDetailView(APIView):
 
         sutradara: Contributor = ContributorRepository().find_by_id(id=tayangan.id_sutradara)
 
+        genres = GenreRepository().find_by_id_tayangan(id_tayangan=tayangan.id)
+
         series_json = {
             **series.to_json(),
             **tayangan_json,
             "episodes": episode_list_json,
             "sutradara": {
                 **sutradara.to_json()
-            }
+            },
+            "genres": [genre.to_json() for genre in genres]
         }
 
         return Response(message='Success get series detail!', data=series_json, status=status.HTTP_200_OK)
