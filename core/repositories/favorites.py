@@ -1,14 +1,44 @@
 from datetime import datetime
 from core.models.favorite import Favorite
 from core.repositories.database import Database
+from core.utils.exceptions.not_found import NotFoundException
 
 
 class FavoriteRepository(Database):
-    def find_by_pk(self, timestamp: datetime, username: str) -> Favorite:
-        ...
+    def find_one(self, timestamp: datetime, username: str) -> Favorite:
+        try:
+            tuples = self.select(
+                f"SELECT * FROM daftar_favorit WHERE username = '{username}' AND timestamp = '{timestamp}'")
+        except Exception as error:
+            raise NotFoundException(error)
 
-    def find_by_username(self, id_username: str) -> list[Favorite]:
-        ...
+        if len(tuples) == 0:
+            raise NotFoundException('Cannot find daftar favorit.')
+
+        tuple = tuples[0]
+
+        return Favorite(
+            timestamp=tuple[0],
+            username=tuple[1],
+            judul=tuple[2]
+        )
+
+    def find_by_username(self, username: str) -> list[Favorite]:
+        try:
+            tuples = self.select(
+                f"SELECT * FROM daftar_favorit WHERE username = '{username}'")
+        except Exception as error:
+            raise NotFoundException(error)
+
+        result: list[Favorite] = []
+        for tuple in tuples:
+            result.append(Favorite(
+                timestamp=tuple[0],
+                username=tuple[1],
+                judul=tuple[2]
+            ))
+
+        return result
 
     def find_all(self) -> list[Favorite]:
         ...

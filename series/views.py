@@ -64,9 +64,6 @@ class SeriesDetailView(APIView):
         tayangan_json.pop('id_sutradara')
 
         episodes = EpisodeRepository().find_by_id_series(id_series=series.id_tayangan)
-        episode_list_json: list[dict[str, Any]] = []
-        for episode in episodes:
-            episode_list_json.append(episode.to_json())
 
         genres = GenreRepository().find_by_id_tayangan(id_tayangan=tayangan.id)
 
@@ -79,7 +76,7 @@ class SeriesDetailView(APIView):
         series_json = {
             **series.to_json(),
             **tayangan_json,
-            "episodes": episode_list_json,
+            "episodes": [episode.to_json() for episode in episodes],
             "sutradara": {
                 **sutradara.to_json()
             },
