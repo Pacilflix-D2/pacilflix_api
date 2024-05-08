@@ -6,6 +6,8 @@ from core.repositories.tayangan import TayanganRepository
 from core.utils.response import Response
 from rest_framework import status
 
+from shows.services import get_top_10_from_tayangan_array
+
 
 class Top10TayanganView(APIView):
     def get(self, request: Request) -> Response:
@@ -14,12 +16,10 @@ class Top10TayanganView(APIView):
 
         shows: list[Tayangan] = tayangan_repository.find_all()
 
-        for show in shows:
-            print('hi')
-            print(show.get_total_views_last_week())
+        top_10_shows = get_top_10_from_tayangan_array(shows=shows)
 
         data_json: list[dict[str, Any]] = []
-        for show in shows:
+        for show in top_10_shows:
             data_json.append(show.to_json())
 
         return Response(message='Success get top 10 shows!', data=data_json, status=status.HTTP_200_OK)
