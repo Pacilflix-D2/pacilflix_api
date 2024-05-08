@@ -76,3 +76,27 @@ class TayanganRepository(Database):
 
     def find_top_tayangan_from_user_country(self, country: str) -> list[Tayangan]:
         ...
+
+    def find_by_judul(self, judul: str) -> list[Tayangan]:
+        try:
+            tuples = self.select(
+                f"SELECT * FROM tayangan WHERE LOWER(judul) LIKE LOWER('%{judul}%') ORDER BY judul")
+        except Exception as error:
+            raise NotFoundException(str(error))
+
+        result: list[Tayangan] = []
+        for tuple in tuples:
+            result.append(
+                Tayangan(
+                    id=str(tuple[0]),
+                    judul=tuple[1],
+                    sinopsis=tuple[2],
+                    asal_negara=tuple[3],
+                    sinopsis_trailer=tuple[4],
+                    url_video_trailer=tuple[5],
+                    release_date_trailer=tuple[6],
+                    id_sutradara=str(tuple[7]),
+                )
+            )
+
+        return result

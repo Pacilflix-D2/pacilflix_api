@@ -27,4 +27,13 @@ class Top10TayanganView(APIView):
 
 class SearchTayanganView(APIView):
     def get(self, request: Request) -> Response:
-        ...
+        search: str | None = request.query_params.get('search')
+
+        if search:
+            shows = TayanganRepository().find_by_judul(judul=search)
+        else:
+            shows = TayanganRepository().find_all()
+
+        data_json = [show.to_json() for show in shows]
+
+        return Response(message='Success search shows by judul!', data=data_json)
