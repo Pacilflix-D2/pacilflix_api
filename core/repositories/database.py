@@ -12,13 +12,27 @@ class Database:
         self._db_host = environ.get('DB_HOST'),
         self._db_port = environ.get('DB_PORT')
 
-    # this could possibly throws error, so wrap this method with try catch
-    def select(self, query: str) -> list[tuple[Any, ...]]:
+    # create, update, delete
+    def _cud(self, query: str) -> None:
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+
+    # read
+    def _r(self, query: str) -> list[tuple[Any, ...]]:
         with connection.cursor() as cursor:
             cursor.execute(query)
             rows: list[tuple[Any, ...]] = cursor.fetchall()
             return rows
 
+    # this could possibly throws error, so wrap this method with try catch
+    def select(self, query: str) -> list[tuple[Any, ...]]:
+        return self._r(query=query)
+
     def insert(self, query: str) -> None:
-        with connection.cursor() as cursor:
-            cursor.execute(query)
+        self._cud(query=query)
+
+    def update(self, query: str) -> None:
+        self._cud(query=query)
+
+    def delete(self, query: str) -> None:
+        self._cud(query=query)
