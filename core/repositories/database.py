@@ -15,12 +15,12 @@ class Database:
     # create, update, delete
     def _cud(self, query: str) -> None:
         with connection.cursor() as cursor:
-            cursor.execute(query)
+            cursor.execute(sql=query)
 
     # read
     def _r(self, query: str) -> list[tuple[Any, ...]]:
         with connection.cursor() as cursor:
-            cursor.execute(query)
+            cursor.execute(sql=query)
             rows: list[tuple[Any, ...]] = cursor.fetchall()
             return rows
 
