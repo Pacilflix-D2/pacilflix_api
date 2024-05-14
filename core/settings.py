@@ -30,6 +30,7 @@ SECRET_KEY = environ.get('SECRET_KEY')
 DEBUG = environ.get('DEBUG') == 'true'
 
 ALLOWED_HOSTS = []
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -49,7 +50,8 @@ INSTALLED_APPS = [
     'shows',
     'subscriptions',
     'film',
-    'series'
+    'series',
+    'corsheaders'
 ]
 
 REST_FRAMEWORK = {
@@ -73,6 +75,7 @@ DATABASES = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'core.middlewares.auth.AuthorizationMiddleware',
