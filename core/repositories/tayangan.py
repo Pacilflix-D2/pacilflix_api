@@ -75,7 +75,28 @@ class TayanganRepository(Database):
         return result
 
     def find_top_tayangan_from_user_country(self, country: str) -> list[Tayangan]:
-        ...
+        try:
+            tayangan_tuples = self.select(
+                f"SELECT * FROM tayangan WHERE asal_negara = '{country}'")
+        except:
+            raise NotFoundException('Cannot find shows.')
+
+        result: list[Tayangan] = []
+        for tayangan in tayangan_tuples:
+            result.append(
+                Tayangan(
+                    id=str(tayangan[0]),
+                    judul=tayangan[1],
+                    sinopsis=tayangan[2],
+                    asal_negara=tayangan[3],
+                    sinopsis_trailer=tayangan[4],
+                    url_video_trailer=tayangan[5],
+                    release_date_trailer=tayangan[6],
+                    id_sutradara=str(tayangan[7]),
+                )
+            )
+
+        return result
 
     def find_by_judul(self, judul: str) -> list[Tayangan]:
         try:
