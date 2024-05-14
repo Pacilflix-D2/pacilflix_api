@@ -60,7 +60,7 @@ class FilmDetailView(APIView):
         data_json = {
             **film.to_json(),
             **tayangan_json,
-            "total_views": tayangan.get_total_views_last_week(),
+            "total_views": tayangan.get_total_views(),
             "rating_avg": tayangan.get_rating(),
             "sutradara": sutradara.to_json(),
             "genres": [genre.to_json() for genre in genres],
