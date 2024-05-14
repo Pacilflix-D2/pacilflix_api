@@ -3,6 +3,7 @@ from typing import Any
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from core.models.contributor import Contributor
+from core.models.episode import Episode
 from core.models.pengguna import Pengguna
 from core.models.series import Series
 from core.models.tayangan import Tayangan
@@ -123,3 +124,16 @@ class SeriesUlasanView(APIView):
             data_json.append(ulasan.to_json())
 
         return Response(message='Success send ulasan!', data=data_json, status=status.HTTP_201_CREATED)
+
+
+class EpisodeDetailView(APIView):
+    def get(self, request: Request, id_tayangan: str, sub_judul_eps: str) -> Response:
+        user: Pengguna | None = get_user(request=request)
+
+        if not user:
+            raise UnauthorizedException('Must login first.')
+
+        episode: Episode = EpisodeRepository().find_by_pk(
+            id_series=id_tayangan, sub_judul=sub_judul_eps)
+
+        return Response(message='Success get episode detail!', data=episode.to_json(), status=status.HTTP_200_OK)

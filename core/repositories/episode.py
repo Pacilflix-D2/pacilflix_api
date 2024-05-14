@@ -30,4 +30,19 @@ class EpisodeRepository(Database):
         return result
 
     def find_by_pk(self, id_series: str, sub_judul: str) -> Episode:
-        ...
+        try:
+            tuples = self.select(
+                f"SELECT * FROM episode WHERE id_series = '{id_series}' AND sub_judul = '{sub_judul}'")
+        except Exception as e:
+            raise NotFoundException(str(e))
+
+        tuple = tuples[0]
+
+        return Episode(
+            id_series=str(tuple[0]),
+            sub_judul=tuple[1],
+            sinopsis=tuple[2],
+            durasi=tuple[3],
+            url_video=tuple[4],
+            release_date=tuple[5]
+        )
