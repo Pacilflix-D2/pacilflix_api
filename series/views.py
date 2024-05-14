@@ -42,14 +42,6 @@ class SeriesListView(APIView):
 
 
 class SeriesDetailView(APIView):
-    '''
-    TODO:
-    - belum ada x di response nya:
-        - genre
-        - pemain
-        - penulis skenario
-    '''
-
     def get(self, request: Request, id_tayangan: str) -> Response:
         user: Pengguna | None = get_user(request=request)
 
@@ -76,6 +68,8 @@ class SeriesDetailView(APIView):
         series_json = {
             **series.to_json(),
             **tayangan_json,
+            "total_views": tayangan.get_total_views(),
+            "rating_avg": tayangan.get_rating(),
             "episodes": [episode.to_json() for episode in episodes],
             "sutradara": {
                 **sutradara.to_json()
