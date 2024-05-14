@@ -6,6 +6,7 @@ from core.models.riwayat_nonton import RiwayatNonton
 from core.repositories.episode import EpisodeRepository
 from core.repositories.film import FilmRepository
 from core.repositories.riwayat_nonton import RiwayatNontonRepository
+from core.repositories.ulasan import UlasanRepository
 from core.utils.exceptions.internal_server_error import InternalServerException
 
 
@@ -69,3 +70,25 @@ class Tayangan(BaseModel):
                 total_duration += episode.durasi
 
             return total_duration
+
+    def _get_rating_avg_film(self) -> float:
+        reviews = UlasanRepository().find_by_id_tayangan(id_tayangan=self.id)
+        rating_sum = 0
+        for review in reviews:
+            rating_sum += review.rating
+
+        return rating_sum / len(reviews)
+
+    def _get_rating_avg_series(self) -> float:
+        reviews = UlasanRepository().find_by_id_tayangan(id_tayangan=self.id)
+        rating_sum = 0
+        for review in reviews:
+            rating_sum += review.rating
+
+        return rating_sum / len(reviews)
+
+    def get_rating(self) -> float:
+        if self.get_type() == 'FILM':
+            return self._get_rating_avg_film()
+        else:
+            return self._get_rating_avg_series()
