@@ -20,7 +20,8 @@ class Top10TayanganView(APIView):
 
         data_json: list[dict[str, Any]] = []
         for show in top_10_shows:
-            data_json.append(show.to_json())
+            data_json.append(
+                {**show.to_json(), "total_views": show.get_total_views_last_week()})
 
         return Response(message='Success get top 10 shows!', data=data_json, status=status.HTTP_200_OK)
 
