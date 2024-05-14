@@ -32,7 +32,8 @@ class FilmListView(APIView):
 
         data_json: list[dict[str, Any]] = []
         for film in films:
-            data_json.append(film.to_json())
+            tayangan = TayanganRepository().find_by_id(id=film.id_tayangan)
+            data_json.append({**film.to_json(), **tayangan.to_json()})
 
         return Response(message='Success get films!', data=data_json, status=status.HTTP_200_OK)
 
