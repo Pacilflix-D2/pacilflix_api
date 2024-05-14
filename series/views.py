@@ -135,5 +135,16 @@ class EpisodeDetailView(APIView):
 
         episode: Episode = EpisodeRepository().find_by_pk(
             id_series=id_tayangan, sub_judul=sub_judul_eps)
+        show: Tayangan = TayanganRepository().find_by_id(id=episode.id_series)
+        another_episodes = filter(lambda episode: episode, EpisodeRepository(
+        ).find_by_id_series(id_series=id_tayangan))
 
-        return Response(message='Success get episode detail!', data=episode.to_json(), status=status.HTTP_200_OK)
+        data_json = {
+            "episode": {
+                **episode.to_json(),
+                "judul": show.judul
+            },
+            "another_episodes": [another_episode.to_json() for another_episode in another_episodes if another_episode.sub_judul != episode.sub_judul]
+        }
+
+        return Response(message='Success get episode detail!', data=data_json, status=status.HTTP_200_OK)

@@ -10,7 +10,7 @@ class EpisodeRepository(Database):
     def find_by_id_series(self, id_series: str) -> list[Episode]:
         try:
             tuples = self.select(
-                f"SELECT * FROM episode WHERE id_series = '{id_series}'")
+                f"SELECT * FROM episode WHERE id_series = '{id_series}' ORDER BY sub_judul")
         except Exception as e:
             raise NotFoundException(str(e))
 
