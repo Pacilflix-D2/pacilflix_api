@@ -101,7 +101,7 @@ class Response(RESTResponse):
             "message": message,
         }  # type: ignore
 
-        if data:
+        if data != None:
             response_data["data"] = data
 
         super().__init__(  # type: ignore

@@ -35,9 +35,12 @@ class Tayangan(BaseModel):
                                      watch_history.start_date_time).total_seconds() / 60
             total_duration = self.get_total_duration()
 
-            if watch_time_in_minutes > total_duration:
-                raise InternalServerException(
-                    'Lama menonton tidak dapat melebihi durasi film.')
+            # if watch_time_in_minutes > total_duration:
+            #     raise InternalServerException(
+            #         'Lama menonton tidak dapat melebihi durasi film.')
+
+            if total_duration == 0:
+                return 0
 
             watch_time_percentage = (
                 watch_time_in_minutes / total_duration) * 100

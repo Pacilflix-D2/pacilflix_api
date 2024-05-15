@@ -24,7 +24,12 @@ class Top10TayanganView(APIView):
         data_json: list[dict[str, Any]] = []
         for show in top_10_shows:
             data_json.append(
-                {**show.to_json(), "total_views": show.get_total_views_last_week()})
+                {
+                    **show.to_json(),
+                    "total_views": show.get_total_views_last_week(),
+                    "type": show.get_type()
+                }
+            )
 
         return Response(message='Success get top 10 shows!', data=data_json, status=status.HTTP_200_OK)
 
@@ -45,7 +50,12 @@ class Top10TayanganCountryView(APIView):
         data_json: list[dict[str, Any]] = []
         for show in top_10_shows:
             data_json.append(
-                {**show.to_json(), "total_views": show.get_total_views_last_week()})
+                {
+                    **show.to_json(),
+                    "total_views": show.get_total_views_last_week(),
+                    "type": show.get_type()
+                }
+            )
 
         return Response(message='Success get top 10 shows!', data=data_json, status=status.HTTP_200_OK)
 
@@ -59,6 +69,11 @@ class SearchTayanganView(APIView):
         else:
             shows = TayanganRepository().find_all()
 
-        data_json = [show.to_json() for show in shows]
+        data_json = [
+            {
+                **show.to_json(),
+                "type": show.get_type()
+            } for show in shows
+        ]
 
         return Response(message='Success search shows by judul!', data=data_json)
