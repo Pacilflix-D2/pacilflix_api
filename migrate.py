@@ -6,6 +6,30 @@ from os import environ
 import sys
 
 
+def add_trigger():
+    load_dotenv(override=True)
+
+    connection = connect(
+        dbname=environ.get('DB_NAME'),
+        user=environ.get('DB_USER'),
+        password=environ.get('DB_PASS'),
+        host=environ.get('DB_HOST'),
+        port=environ.get('DB_PORT', 5432)
+    )
+    connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    print('CONNECTION SUCCESS!')
+
+    cursor = connection.cursor()
+    with open('trigger.sql', 'r') as sql_file:
+        sql_commands = sql_file.read()
+
+    cursor.execute(sql_commands)
+    print('SUCCESS ADD TRIGGERS!')
+
+    cursor.close()
+    connection.close()
+
+
 def migrate():
     print('Migrating...')
     load_dotenv(override=True)
@@ -29,6 +53,8 @@ def migrate():
 
     cursor.close()
     connection.close()
+
+    add_trigger()
 
 
 def seeding():
