@@ -1,7 +1,22 @@
 -- Trigger biru
 -- ISI DISINI
 -- Trigger hijau
--- ISI DISINI
+CREATE
+OR REPLACE FUNCTION check_if_user_already_sent_review () RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM ULASAN WHERE id_tayangan = NEW.id_tayangan AND username = NEW.username) THEN
+        RETURN NEW
+    ELSE
+        RAISE EXCEPTION 'Gagal membuat ulasan. Anda sudah menulis ulasan di tayangan ini.';
+    END IF;
+END;
+$$ LANGUAGE plpgsql
+;
+
+CREATE TRIGGER check_if_user_already_sent_review_trigger BEFORE INSERT ON ULASAN FOR EACH ROW
+EXECUTE FUNCTION check_if_user_already_sent_review ()
+;
+
 -- Trigger kuning
 -- ISI DISINI
 -- Trigger merah
