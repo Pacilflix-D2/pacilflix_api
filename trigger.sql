@@ -1,6 +1,12 @@
-CREATE OR REPLACE FUNCTION buy_subscription()
-RETURNS TRIGGER AS
-$$
+-- Trigger biru
+-- ISI DISINI
+-- Trigger hijau
+-- ISI DISINI
+-- Trigger kuning
+-- ISI DISINI
+-- Trigger merah
+CREATE
+OR REPLACE FUNCTION buy_subscription () RETURNS TRIGGER AS $$
 BEGIN
     IF EXISTS((SELECT 1 FROM transaction t WHERE t.username = new.username AND t.end_date_time >= current_date)) THEN
         UPDATE transaction
@@ -15,10 +21,12 @@ BEGIN
         RETURN NEW;
     END IF;
 END
-$$
-LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+;
 
-DROP TRIGGER IF EXISTS buy_subscription ON transaction;
-CREATE TRIGGER buy_subscription
-BEFORE INSERT ON transaction
-FOR EACH ROW EXECUTE FUNCTION buy_subscription();
+DROP TRIGGER IF EXISTS buy_subscription ON TRANSACTION
+;
+
+CREATE TRIGGER buy_subscription BEFORE INSERT ON TRANSACTION FOR EACH ROW
+EXECUTE FUNCTION buy_subscription ()
+;
