@@ -1,5 +1,21 @@
 -- Trigger biru
 -- ISI DISINI
+CREATE OR REPLACE FUNCTION check_username_exists() 
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM PENGGUNA WHERE username = NEW.username) THEN
+        RAISE EXCEPTION 'Error: Username already exists';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_insert_pengguna
+BEFORE INSERT ON PENGGUNA
+FOR EACH ROW
+EXECUTE FUNCTION check_username_exists();
+
+
 -- Trigger hijau
 CREATE
 OR REPLACE FUNCTION check_if_user_already_sent_review () RETURNS TRIGGER AS $$
