@@ -1,27 +1,26 @@
 -- Trigger biru
 -- ISI DISINI
-CREATE OR REPLACE FUNCTION check_username_exists() 
-RETURNS TRIGGER AS $$
+CREATE
+OR REPLACE FUNCTION check_username_exists () RETURNS TRIGGER AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM PENGGUNA WHERE username = NEW.username) THEN
         RAISE EXCEPTION 'Error: Username already exists';
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+;
 
-CREATE TRIGGER before_insert_pengguna
-BEFORE INSERT ON PENGGUNA
-FOR EACH ROW
-EXECUTE FUNCTION check_username_exists();
-
+CREATE TRIGGER before_insert_pengguna BEFORE INSERT ON PENGGUNA FOR EACH ROW
+EXECUTE FUNCTION check_username_exists ()
+;
 
 -- Trigger hijau
 CREATE
 OR REPLACE FUNCTION check_if_user_already_sent_review () RETURNS TRIGGER AS $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM ULASAN WHERE id_tayangan = NEW.id_tayangan AND username = NEW.username) THEN
-        RETURN NEW
+        RETURN NEW;
     ELSE
         RAISE EXCEPTION 'Gagal membuat ulasan. Anda sudah menulis ulasan di tayangan ini.';
     END IF;
@@ -34,25 +33,21 @@ EXECUTE FUNCTION check_if_user_already_sent_review ()
 ;
 
 -- Trigger kuning
-CREATE OR REPLACE FUNCTION validate_delete_downloaded_shows()
-RETURNS TRIGGER AS
-$$
+CREATE
+OR REPLACE FUNCTION validate_delete_downloaded_shows () RETURNS TRIGGER AS $$
 BEGIN
-    IF OLD.timestamp BETWEEN CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' - INTERVAL '24 hours' AND
-                               CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' THEN
+    IF OLD.timestamp BETWEEN (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta') - INTERVAL '24 hours' AND
+                               (CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta') THEN
         RAISE EXCEPTION 'Tayangan yang baru diunduh kurang dari 1 hari tidak dapat dihapus';
     ELSE
         RETURN OLD;
     END IF;
 END;
-$$
-LANGUAGE plpgsql
+$$ LANGUAGE plpgsql
 ;
 
-CREATE TRIGGER verify_delete_downloaded_shows
-BEFORE DELETE ON TAYANGAN_TERUNDUH
-FOR EACH ROW
-EXECUTE FUNCTION validate_delete_downloaded_shows()
+CREATE TRIGGER verify_delete_downloaded_shows BEFORE DELETE ON TAYANGAN_TERUNDUH FOR EACH ROW
+EXECUTE FUNCTION validate_delete_downloaded_shows ()
 ;
 
 -- Trigger merah
