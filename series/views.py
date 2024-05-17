@@ -107,7 +107,7 @@ class SeriesUlasanView(APIView):
         if not user:
             raise UnauthorizedException('Must login first.')
 
-        deskripsi: str | None = request.data.get('deskripsi', None)
+        deskripsi: str | None = request.data.get('description', None)
         rating: int = request.data.get('rating', 0)
 
         if deskripsi and len(deskripsi) > 255:
