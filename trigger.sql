@@ -34,7 +34,27 @@ EXECUTE FUNCTION check_if_user_already_sent_review ()
 ;
 
 -- Trigger kuning
--- ISI DISINI
+CREATE OR REPLACE FUNCTION validate_delete_downloaded_shows()
+RETURNS TRIGGER AS
+$$
+BEGIN
+    IF OLD.timestamp BETWEEN CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' - INTERVAL '24 hours' AND
+                               CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta' THEN
+        RAISE EXCEPTION 'Tayangan yang baru diunduh kurang dari 1 hari tidak dapat dihapus';
+    ELSE
+        RETURN OLD;
+    END IF;
+END;
+$$
+LANGUAGE plpgsql
+;
+
+CREATE TRIGGER verify_delete_downloaded_shows
+BEFORE DELETE ON TAYANGAN_TERUNDUH
+FOR EACH ROW
+EXECUTE FUNCTION validate_delete_downloaded_shows()
+;
+
 -- Trigger merah
 CREATE
 OR REPLACE FUNCTION buy_subscription () RETURNS TRIGGER AS $$
