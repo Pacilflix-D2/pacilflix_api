@@ -8,5 +8,5 @@ urlpatterns = [
     path('favorites/', include(('favorites.urls', 'favorites'))),
     path('subscriptions/', include(('subscriptions.urls', 'subscriptions'))),
     path('film/', include(('film.urls', 'film'))),
-    path('series/', include(('series.urls', 'series')))
+    path('series/', include(('series.urls', 'series'))),
 ]

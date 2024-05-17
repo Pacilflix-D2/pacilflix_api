@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'subscriptions',
     'film',
     'series',
-    'corsheaders'
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
