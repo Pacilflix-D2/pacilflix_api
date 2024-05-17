@@ -36,6 +36,6 @@ class PenggunaRepository(Database):
                     f"INSERT INTO PENGGUNA (username, password, negara_asal) VALUES ('{username}', '{password}', '{negara_asal}')")
         except Exception as e:
             print(e)
-            raise InternalServerException('Failed to create user.')
+            raise InternalServerException(e)
 
         return new_user
