@@ -97,8 +97,11 @@ def reset():
     print('CONNECTION SUCCESS!')
 
     cursor = connection.cursor()
-    cursor.execute('DROP SCHEMA public CASCADE')
-    print('Success drop schema!')
+    try:
+        cursor.execute('DROP SCHEMA public CASCADE')
+        print('Success drop schema!')
+    except:
+        print('Failed to drop schema public.')
     cursor.execute('CREATE SCHEMA public')
     print('Success create schema!')
 

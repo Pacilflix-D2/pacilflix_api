@@ -29,25 +29,46 @@ class Tayangan(BaseModel):
             return 'SERIES'
 
     def _base_count_total_views(self, watch_histories: list[RiwayatNonton]) -> int:
-        total_views = 0
-        for watch_history in watch_histories:
-            watch_time_in_minutes = (watch_history.end_date_time -
-                                     watch_history.start_date_time).total_seconds() / 60
-            total_duration = self.get_total_duration()
+        if self.get_type() == 'FILM':
+            total_views = 0
+            for watch_history in watch_histories:
+                watch_time_in_minutes = (watch_history.end_date_time -
+                                         watch_history.start_date_time).total_seconds() / 60
+                total_duration = self.get_total_duration()
 
-            # if watch_time_in_minutes > total_duration:
-            #     raise InternalServerException(
-            #         'Lama menonton tidak dapat melebihi durasi film.')
+                # if watch_time_in_minutes > total_duration:
+                #     raise InternalServerException(
+                #         'Lama menonton tidak dapat melebihi durasi film.')
+
+                if total_duration == 0:
+                    return 0
+
+                watch_time_percentage = (
+                    watch_time_in_minutes / total_duration) * 100
+
+                if watch_time_percentage >= 70:
+                    total_views += 1
+
+            return total_views
+
+        else:
+            total_watch_time_in_minutes = 0
+            for watch_history in watch_histories:
+                watch_time_in_minutes = (watch_history.end_date_time -
+                                         watch_history.start_date_time).total_seconds() / 60
+                total_watch_time_in_minutes += watch_time_in_minutes
+
+            total_duration = self.get_total_duration()
 
             if total_duration == 0:
                 return 0
 
             watch_time_percentage = (
-                watch_time_in_minutes / total_duration) * 100
-            if watch_time_percentage >= 70:
-                total_views += 1
+                total_watch_time_in_minutes / total_duration) * 100
 
-        return total_views
+            total_views = round(watch_time_percentage) % 70
+
+            return total_views
 
     def get_total_views(self) -> int:
         watch_histories: list[RiwayatNonton] = RiwayatNontonRepository(

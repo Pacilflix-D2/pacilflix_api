@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -13,6 +13,7 @@ from core.repositories.episode import EpisodeRepository
 from core.repositories.gender import GenreRepository
 from core.repositories.pemain import PemainRepository
 from core.repositories.penulis_skenario import PenulisSkenarioRepository
+from core.repositories.riwayat_nonton import RiwayatNontonRepository
 from core.repositories.series import SeriesRepository
 from core.repositories.tayangan import TayanganRepository
 from core.repositories.ulasan import UlasanRepository
@@ -148,3 +149,21 @@ class EpisodeDetailView(APIView):
         }
 
         return Response(message='Success get episode detail!', data=data_json, status=status.HTTP_200_OK)
+
+    def post(self, request: Request, id_tayangan: str, sub_judul_eps: str) -> Response:
+        user: Pengguna | None = get_user(request=request)
+
+        if not user:
+            raise UnauthorizedException('Must login first.')
+
+        watch_duration: int | None = request.data.get('watch_duration')
+        if not watch_duration:
+            raise BadRequestException('watch_duration is required')
+
+        end_date_time = datetime.now()
+        start_date_time = end_date_time - timedelta(minutes=watch_duration)
+
+        RiwayatNontonRepository().create(id_tayangan=id_tayangan, username=user.username,
+                                         start_date_time=start_date_time, end_date_time=end_date_time)
+
+        return Response(message='Sukses nonton!', status=status.HTTP_201_CREATED)

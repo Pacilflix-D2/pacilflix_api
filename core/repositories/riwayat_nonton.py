@@ -54,3 +54,20 @@ class RiwayatNontonRepository(Database):
 
     def find_one(self, username: str, start_date_time: datetime) -> RiwayatNonton:
         ...
+
+    def create(self, id_tayangan: str, username: str, start_date_time: datetime, end_date_time: datetime) -> RiwayatNonton:
+        new_riwayat = RiwayatNonton(
+            id_tayangan=id_tayangan,
+            username=username,
+            start_date_time=start_date_time,
+            end_date_time=end_date_time,
+        )
+
+        try:
+            self.insert(
+                f"insert into riwayat_nonton values ('{id_tayangan}', '{username}', '{start_date_time}', '{end_date_time}')")
+        except Exception as e:
+            print(e)
+            raise InternalServerException('Failed to create riwayat nonton.')
+
+        return new_riwayat
